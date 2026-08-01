@@ -1,0 +1,4 @@
+interface:
+  display_name: "User Intervention Gateway"
+  short_description: "Prompt user for authorization or input, then continue."
+  default_prompt: "Use this skill when a task requires user authorization confirmation or user-entered information during testing, setup, or delivery."

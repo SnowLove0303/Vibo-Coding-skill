@@ -1,0 +1,4 @@
+interface:
+  display_name: "需求与审计技能"
+  short_description: "用于需求定义、任务发出、四级审计与交付判定的全流程规范"
+  default_prompt: "使用 $requirements-audit-thread 处理当前需求、审计或交付判定。"

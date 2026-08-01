@@ -1,0 +1,4 @@
+interface:
+  display_name: "四级终审治理复核"
+  short_description: "独立终审资料包、完整需求、分段进度、发布风险和放行/否决结论"
+  default_prompt: "使用 四级终审治理复核 对当前任务进行独立审计，输出问题、证据、风险和结论。"

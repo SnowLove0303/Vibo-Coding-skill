@@ -1,0 +1,4 @@
+interface:
+  display_name: "人事部线程技能"
+  short_description: "用于线程派发、资料包交接、状态协调与协作治理的规范"
+  default_prompt: "使用 $hr-thread 办理当前线程、资料包或跨线程交接。"

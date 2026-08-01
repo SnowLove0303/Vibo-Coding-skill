@@ -1,0 +1,4 @@
+interface:
+  display_name: "三级 Agentic 真实路径代测"
+  short_description: "按普通用户真实路径执行指令化/非鼠标测试和端到端证据核验"
+  default_prompt: "使用 三级 Agentic 真实路径代测 对当前任务进行独立审计，输出问题、证据、风险和结论。"

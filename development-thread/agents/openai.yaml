@@ -1,0 +1,4 @@
+interface:
+  display_name: "开发线程技能"
+  short_description: "用于真实开发、自测、回归、回滚与技术交接的执行规范"
+  default_prompt: "使用 $development-thread 承接并完成当前正式开发任务。"

@@ -1,0 +1,7 @@
+interface:
+  display_name: "RAEVE 开发治理"
+  short_description: "Mandatory governance before feature work"
+  default_prompt: "Use $raeve-development-governance to govern this feature before implementation."
+
+policy:
+  allow_implicit_invocation: true

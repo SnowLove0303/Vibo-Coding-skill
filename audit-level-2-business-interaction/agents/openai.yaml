@@ -1,0 +1,4 @@
+interface:
+  display_name: "二级业务交互审计"
+  short_description: "审用户级业务流程、真实状态、实时反馈、UI 入口和交付闭环"
+  default_prompt: "使用 二级业务交互审计 对当前任务进行独立审计，输出问题、证据、风险和结论。"
