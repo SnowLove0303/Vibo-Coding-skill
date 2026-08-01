@@ -14,6 +14,8 @@ Use this skill whenever user intervention is truly required during execution. Do
 
 After the user completes the prompt, immediately continue the task flow. Do not turn user intervention into scattered command editing.
 
+This is a global skill. Any Codex thread that encounters authorization, login completion, real business input, file/path/resource selection, release confirmation, or audit/test verification that truly requires the user must trigger this skill or an equivalent project-local waiting gateway. The task stays active while waiting; after the result is returned, continue the original workflow immediately.
+
 ## Scenario Selection
 
 Call only the scenario that is currently needed. Do not show all intervention options to the user.
@@ -33,6 +35,8 @@ Call only the scenario that is currently needed. Do not show all intervention op
 3. Keep the process waiting until the user approves, denies, cancels, or submits the requested information.
 4. Use the returned JSON result to continue immediately.
 5. Put technical commands only in developer/audit evidence, not in user-facing artificial test steps.
+6. Do not end the task, hand off, or report completion merely because user intervention is needed. Only stop if the returned result is denial/cancel, an explicit user stop, or an external condition makes continuation impossible; otherwise resume the pending operation in the same task flow.
+7. In audit tasks, use this gateway for required user authorization/input before or during audit execution, then continue the selected audit skill path with the returned result.
 
 ## Authorization Flow
 
