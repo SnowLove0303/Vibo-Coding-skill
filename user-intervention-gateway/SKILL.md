@@ -16,6 +16,8 @@ After the user completes the prompt, immediately continue the task flow. Do not 
 
 This is a global skill. Any Codex thread that encounters authorization, login completion, real business input, file/path/resource selection, release confirmation, or audit/test verification that truly requires the user must trigger this skill or an equivalent project-local waiting gateway. The task stays active while waiting; after the result is returned, continue the original workflow immediately.
 
+Do not defer required user intervention to the final report. If real login, Chrome/CDP/ERP account entry, verification code, external risk control, real popup confirmation, API-ready/state/resource callback verification, cancellation/close/timeout lease recovery, isolated cache cleanup, automatic rebuild, or restore verification needs user action, trigger this gateway during execution and wait. Do not finish with "still unverified", "cannot claim pass", or "user should test later" when this gateway could continue the verification path.
+
 ## Scenario Selection
 
 Call only the scenario that is currently needed. Do not show all intervention options to the user.
@@ -37,6 +39,7 @@ Call only the scenario that is currently needed. Do not show all intervention op
 5. Put technical commands only in developer/audit evidence, not in user-facing artificial test steps.
 6. Do not end the task, hand off, or report completion merely because user intervention is needed. Only stop if the returned result is denial/cancel, an explicit user stop, or an external condition makes continuation impossible; otherwise resume the pending operation in the same task flow.
 7. In audit tasks, use this gateway for required user authorization/input before or during audit execution, then continue the selected audit skill path with the returned result.
+8. If the gateway returns success/completed, immediately run the pending verification, state lookup, data/resource/API-ready callback, lease recovery check, cache rebuild check, or restore check. The final report may include the completed intervention as evidence, but not as an unresolved item.
 
 ## Authorization Flow
 
