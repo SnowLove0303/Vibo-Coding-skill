@@ -7,17 +7,29 @@ description: Use when a Codex task, test, setup, delivery, authorization, config
 
 ## Purpose
 
-Use this skill whenever user intervention is truly required during execution. The only normal intervention types are:
+Use this skill whenever user intervention is truly required during execution. Do not merely report "manual intervention required." Trigger the matching interaction item and wait. The only normal intervention types are:
 
 1. Authorization: show a clear allow/deny confirmation and wait for the user.
 2. Input: show a clear input/selection prompt and wait for the user.
 
 After the user completes the prompt, immediately continue the task flow. Do not turn user intervention into scattered command editing.
 
+## Scenario Selection
+
+Call only the scenario that is currently needed. Do not show all intervention options to the user.
+
+| Scenario | Mode | Use for |
+| --- | --- | --- |
+| `ResourceIsolationAuthorization` | Authorization | Isolated database/Profile authorization, formal resource registration isolation, destructive or high-risk resource permission. |
+| `FormalLoginInput` | Input | Formal account/password login, verification code, external risk-control step, or "complete login then continue" gate. |
+| `BusinessInput` | Input | A real business value, account/resource choice, or business decision that cannot be inferred automatically. |
+| `FileOrPathSelection` | Input | User-selected file, directory, Profile path, database path, or other real local resource path. |
+| `Generic` | Authorization or Input | Only when no specific scenario applies. |
+
 ## Required Behavior
 
 1. First solve everything that can be solved automatically: path detection, default value discovery, dependency checks, state checks, result verification, retries, and follow-up execution.
-2. If user intervention remains necessary, launch `scripts/UserInterventionGateway.ps1` or an equivalent project-local wrapper.
+2. If user intervention remains necessary, launch `scripts/UserInterventionGateway.ps1` or an equivalent project-local wrapper with the matching `-Scenario`.
 3. Keep the process waiting until the user approves, denies, cancels, or submits the requested information.
 4. Use the returned JSON result to continue immediately.
 5. Put technical commands only in developer/audit evidence, not in user-facing artificial test steps.
@@ -39,6 +51,12 @@ Command pattern:
 powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Codex\skills\user-intervention-gateway\scripts\UserInterventionGateway.ps1" -Mode Authorize -Title "授权确认" -Message "允许本次任务连接指定服务并继续执行。"
 ```
 
+Scenario pattern:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Codex\skills\user-intervention-gateway\scripts\UserInterventionGateway.ps1" -Scenario ResourceIsolationAuthorization
+```
+
 ## Input Flow
 
 Use for non-sensitive business input, file/path selection, account/resource choice, environment choice, or a user business decision.
@@ -57,11 +75,20 @@ Command pattern:
 powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Codex\skills\user-intervention-gateway\scripts\UserInterventionGateway.ps1" -Mode Input -Title "信息输入" -Prompt "请输入本次要使用的资源名称"
 ```
 
+Scenario patterns:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Codex\skills\user-intervention-gateway\scripts\UserInterventionGateway.ps1" -Scenario FormalLoginInput
+powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Codex\skills\user-intervention-gateway\scripts\UserInterventionGateway.ps1" -Scenario FileOrPathSelection
+```
+
 ## Sensitive Inputs
 
 Do not write passwords, tokens, cookies, private keys, or secrets into files, logs, command history, chat summaries, or AGENTS.md. Prefer official login flows, system credential managers, approved connectors, or secure input paths.
 
 If a sensitive value cannot be handled safely, stop and explain the risk, then wait for explicit user confirmation.
+
+For formal account login, prefer launching the real official login entry and use this gateway only to wait for the user's completion/confirmation. Do not store returned passwords or verification codes.
 
 ## User-Facing Test Rule
 

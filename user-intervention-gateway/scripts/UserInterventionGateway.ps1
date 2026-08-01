@@ -1,13 +1,15 @@
-param(
-    [Parameter(Mandatory = $true)]
+﻿param(
     [ValidateSet('Authorize', 'Input')]
-    [string]$Mode,
+    [string]$Mode = 'Authorize',
 
     [string]$Title = 'User intervention required',
     [string]$Message = '',
     [string]$Prompt = '',
     [string]$DefaultValue = '',
     [string]$OutputPath = '',
+
+    [ValidateSet('Generic', 'ResourceIsolationAuthorization', 'FormalLoginInput', 'BusinessInput', 'FileOrPathSelection')]
+    [string]$Scenario = 'Generic',
 
     [ValidateSet('Allow', 'Deny', 'Cancel')]
     [string]$DefaultDecision = 'Allow',
@@ -17,6 +19,44 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+
+if ($Scenario -eq 'ResourceIsolationAuthorization') {
+    $Mode = 'Authorize'
+    if (-not $Title -or $Title -eq 'User intervention required') {
+        $Title = '授权隔离资源'
+    }
+    if (-not $Message) {
+        $Message = '允许本次流程使用隔离数据库或隔离 Profile 继续执行。'
+    }
+}
+if ($Scenario -eq 'FormalLoginInput') {
+    $Mode = 'Input'
+    $Sensitive = $true
+    if (-not $Title -or $Title -eq 'User intervention required') {
+        $Title = '正式登录输入'
+    }
+    if (-not $Prompt -and -not $Message) {
+        $Prompt = '请在正式登录流程中输入账号、密码、验证码或完成外部风控后确认。'
+    }
+}
+if ($Scenario -eq 'BusinessInput') {
+    $Mode = 'Input'
+    if (-not $Title -or $Title -eq 'User intervention required') {
+        $Title = '业务信息输入'
+    }
+    if (-not $Prompt -and -not $Message) {
+        $Prompt = '请输入本次流程需要的真实业务信息。'
+    }
+}
+if ($Scenario -eq 'FileOrPathSelection') {
+    $Mode = 'Input'
+    if (-not $Title -or $Title -eq 'User intervention required') {
+        $Title = '路径或文件选择'
+    }
+    if (-not $Prompt -and -not $Message) {
+        $Prompt = '请输入或粘贴本次流程需要使用的文件或路径。'
+    }
+}
 
 function Write-Result {
     param([hashtable]$Result)
@@ -37,6 +77,7 @@ function New-BaseResult {
         mode = $Mode
         title = $Title
         timestamp = (Get-Date).ToString('o')
+        scenario = $Scenario
         approved = $false
         cancelled = $false
         value = $null
